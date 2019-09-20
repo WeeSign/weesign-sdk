@@ -1,6 +1,3 @@
-/**
- * Created by sunny.
- */
 "use strict";
 module.exports = Object.freeze({
 
@@ -47,6 +44,7 @@ module.exports = Object.freeze({
             ADD_ENTITY: 'add-entity'
         },
         CONTENT_TYPE: {
+            MULTI_PART_FORM_DATA: 'multipart/form-data',
             URL_ENCODE: 'application/x-www-form-urlencoded',
             APPLICATION_JSON:  "application/json"
         }
@@ -76,5 +74,12 @@ module.exports = Object.freeze({
     },
     COUNTRY:{
         MEXICO:"Mexico"
+    },
+    LANGUAGE:{
+        SPANISH:"es",
+        ENGLISH:"en"
+    },
+    MESSAGE:{
+        INVALID_PARAMS:"Invalid Parameters"
     }
 });
