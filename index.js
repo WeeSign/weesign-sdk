@@ -1,7 +1,7 @@
 require('lodash');
 let HttpService = require('./services/httpService');
 let constant = require('./common/constants');
-let fs =require('fs');
+let fs = require('fs');
 
 /**
  *
