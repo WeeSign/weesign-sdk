@@ -68,7 +68,7 @@ const data = {
 // Create access token
 // (Note: this access token is valid up to 5 minutes)
 
-const response = await demo.accessToken(data);
+const response = await weesign.accessToken(data);
 
 // and the reponse will be look like this
 // { responseData: { accessToken: 'f1a664ea710062baae92bc59d5bd8560d2c4929b' },
