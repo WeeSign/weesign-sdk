@@ -1,5 +1,5 @@
 {
-  "name": "weesign",
+  "name": "@weesign/weesign",
   "version": "0.2.1",
   "description": "weesign sdk for signing the document",
   "main": "index.js",
