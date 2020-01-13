@@ -1,6 +1,6 @@
 {
-  "name": "@weesign/weesign-sdk",
-  "version": "0.1.1",
+  "name": "weesign",
+  "version": "0.2.1",
   "description": "weesign sdk for signing the document",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,9 @@
   },
   "author": "WeeSign (https://weesign.mx)",
   "license": "ISC",
-  "homepage": "https://github.com/weesign/weesign-sdk#readme",
+  "homepage": "https://github.com/weesign/weesign-node#readme",
   "dependencies": {
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "lodash": "^4.17.15"
   }
 }

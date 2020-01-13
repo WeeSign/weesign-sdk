@@ -1,7 +1,9 @@
 require('lodash');
-let HttpService = require('./services/httpService');
-let constant = require('./common/constants');
-let fs = require('fs');
+
+const fs = require('fs');
+const HttpService = require('./services/http');
+const constant = require('./common/constants');
+
 
 /**
  *
@@ -20,8 +22,8 @@ async function accessToken(requestData) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
     let headers = {
-        'user-id': requestData['user-id'] ? requestData['user-id'] : "",
-        'api-key': requestData['api-key'] ? requestData['api-key'] : ""
+        'user-id': requestData['user-id'] ? requestData['user-id'] : '',
+        'api-key': requestData['api-key'] ? requestData['api-key'] : ''
     };
 
     return await HttpService.httpRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, constant.API_END_POINTS.ACCESS_TOKEN, {}, headers);
@@ -102,7 +104,7 @@ async function getDocuments(requestData) {
 async function getDocumentByID(requestData) {
     let headers = getHeaders(requestData);
 
-    let path = constant.API_END_POINTS.DOCUMENTS + `/${requestData.documentID ? requestData.documentID : ""}`;
+    let path = constant.API_END_POINTS.DOCUMENTS + `/${requestData.documentID ? requestData.documentID : ''}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.GET, constant.HOST_URL, path, {}, headers);
 
 }
@@ -161,9 +163,9 @@ async function updateDocument(requestData) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
     let data = {
-        documentID: requestData.documentID ? requestData.documentID : "",
-        documentSignType: requestData.documentSignType ? requestData.documentSignType : "",
-        country: requestData.country ? requestData.country : "",
+        documentID: requestData.documentID ? requestData.documentID : '',
+        documentSignType: requestData.documentSignType ? requestData.documentSignType : '',
+        country: requestData.country ? requestData.country : '',
     };
 
     let path = constant.API_END_POINTS.DOCUMENTS;
@@ -191,8 +193,8 @@ async function shareDocument(requestData) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
     let data = {
-        documentID: requestData.documentID ? requestData.documentID : "",
-        postedTo: requestData.postedTo ? requestData.postedTo : ""
+        documentID: requestData.documentID ? requestData.documentID : '',
+        postedTo: requestData.postedTo ? requestData.postedTo : ''
     };
 
     let path = constant.API_END_POINTS.DOCUMENTS_SHARE;
@@ -218,7 +220,7 @@ async function deleteDocument(requestData) {
     if (!headers)
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
-    let path = constant.API_END_POINTS.DOCUMENTS + `?documentID=${requestData.documentID ? requestData.documentID : ""}`;
+    let path = constant.API_END_POINTS.DOCUMENTS + `?documentID=${requestData.documentID ? requestData.documentID : ''}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.DELETE, constant.HOST_URL, path, {}, headers);
 
 }
@@ -244,9 +246,9 @@ async function addSignatory(requestData) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
     let data = {
-        documentID: requestData.documentID ? requestData.documentID : "",
-        message: requestData.message ? requestData.message : "",
-        title: requestData.title ? requestData.title : "",
+        documentID: requestData.documentID ? requestData.documentID : '',
+        message: requestData.message ? requestData.message : '',
+        title: requestData.title ? requestData.title : '',
         signatory: requestData.signatory && requestData.signatory.length ? requestData.signatory : [],
     };
 
@@ -272,7 +274,7 @@ async function resendEmailToSignatory(requestData) {
     if (!headers)
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
-    let path = constant.API_END_POINTS.DOCUMENTS_RESEND + `?documentID=${requestData.documentID ? requestData.documentID : ""}`;
+    let path = constant.API_END_POINTS.DOCUMENTS_RESEND + `?documentID=${requestData.documentID ? requestData.documentID : ''}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, {}, headers);
 
 }
@@ -295,7 +297,7 @@ async function addWebHook(requestData) {
     let headers = getHeaders(requestData);
     if (!headers)
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
-    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url ? requestData.url : ""}&type=${requestData.type ? requestData.type : constant.WEBHOOK_TYPE.COMPLETE_DOCUMENT}`;
+    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url ? requestData.url : ''}&type=${requestData.type ? requestData.type : constant.WEBHOOK_TYPE.COMPLETE_DOCUMENT}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, path, {}, headers);
 
 }
@@ -373,8 +375,8 @@ function getHeaders(requestData) {
         return false;
 
     return {
-        'user-id': requestData['user-id'] ? requestData['user-id'] : "",
-        'token': requestData.token ? requestData.token : ""
+        'user-id': requestData['user-id'] ? requestData['user-id'] : '',
+        'token': requestData.token ? requestData.token : ''
     };
 }
 
@@ -392,5 +394,5 @@ module.exports = {
     addWebHook,
     getWebHook,
     deleteWebHook,
-    updateWebHook
+    updateWebHook,
 };
