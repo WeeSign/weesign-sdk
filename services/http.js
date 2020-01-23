@@ -10,7 +10,7 @@ class HttpService {
             request.post({
                 url: hostname + path,
                 formData: data,
-                headers
+                headers,
             }, function optionalCallback(error, response, body) {
                 if (error) {
                     data.error = error;
@@ -18,10 +18,8 @@ class HttpService {
                 } else {
                     try{
                         fulfill(JSON.parse(body));
-                    }
-                    catch (e) {
+                    } catch (e) {
                         fulfill(body);
-
                     }
                 }
             });
@@ -34,16 +32,16 @@ class HttpService {
                 url: hostname + path,
                 method: method,
                 headers: headers,
-                family: 4
+                family: 4,
             };
 
-            if (headers && headers['Content-Type'] === Constants.HTTP.CONTENT_TYPE.MULTI_PART_FORM_DATA)
+            if (headers && headers['Content-Type'] === Constants.HTTP.CONTENT_TYPE.MULTI_PART_FORM_DATA) {
                 options.formData = data;
-            else
+            } else {
                 options.json = data;
+            }
 
             request(options, function (error, response, body) {
-
                 if (error) {
                     data.error = error;
                     reject(error);
@@ -59,7 +57,7 @@ class HttpService {
             responseData: data,
             message: message,
             success: success,
-            responseCode: code
+            responseCode: code,
         };
 
     }

@@ -18,12 +18,13 @@ const constant = require('./common/constants');
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function accessToken(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData['api-key'])
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData['api-key']) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let headers = {
-        'user-id': requestData['user-id'] ? requestData['user-id'] : '',
-        'api-key': requestData['api-key'] ? requestData['api-key'] : ''
+    const headers = {
+        'user-id': requestData['user-id'] || '',
+        'api-key': requestData['api-key'] || '',
     };
 
     return await HttpService.httpRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, constant.API_END_POINTS.ACCESS_TOKEN, {}, headers);
@@ -44,22 +45,25 @@ async function accessToken(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function addDocument(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.file || !requestData.file.path || !requestData.documentSignType|| !requestData.country || !requestData.language)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.file || !requestData.file.path || !requestData.documentSignType|| !requestData.country || !requestData.language) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
-    let headers = getHeaders(requestData);
+    }
+
+    const headers = {
+        ...getHeaders(requestData),
+        documentSignType:requestData.documentSignType || constant.DOCUMENT_SIGN_TYPE.ELECTRONIC,
+        country:requestData.country || constant.COUNTRY.MEXICO,
+        language:requestData.language || constant.LANGUAGE.SPANISH,
+        filename: requestData.file.name || requestData.file.path.replace(/^.*[\\\/]/, ''),
+    };
 
     const formData = {
         document: {
             value:  fs.createReadStream(requestData.file.path),
-            options: {
-                documentSignType:requestData.documentSignType ? requestData.documentSignType : constant.DOCUMENT_SIGN_TYPE.ELECTRONIC,
-                country:requestData.country ? requestData.country : constant.COUNTRY.MEXICO,
-                language:requestData.language ? requestData.language : constant.LANGUAGE.SPANISH,
-                filename: requestData.file.name ?requestData.file.name : requestData.file.path.replace(/^.*[\\\/]/, '')
-            }
-        }
+        },
     };
-    let path = constant.API_END_POINTS.DOCUMENTS;
+
+    const path = constant.API_END_POINTS.DOCUMENTS;
     return await HttpService.httpMultiPartRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, path, formData, headers);
 
 
@@ -78,14 +82,15 @@ async function addDocument(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function getDocuments(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let headers = getHeaders(requestData);
+    const headers = getHeaders(requestData);
     if (!headers)
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
 
-    let path = constant.API_END_POINTS.DOCUMENTS + `?status=${requestData.status ? requestData.status : "ALL"}&${requestData.limit ? requestData.limit : 0}&${requestData.skip ? requestData.skip : 0}`;
+    const path = constant.API_END_POINTS.DOCUMENTS + `?status=${requestData.status ? requestData.status : 'ALL'}&${requestData.limit || 0}&${requestData.skip || 0}`;
 
     return await HttpService.httpRequest(constant.HTTP_METHOD.GET, constant.HOST_URL, path, {}, headers);
 
@@ -104,7 +109,7 @@ async function getDocuments(requestData) {
 async function getDocumentByID(requestData) {
     let headers = getHeaders(requestData);
 
-    let path = constant.API_END_POINTS.DOCUMENTS + `/${requestData.documentID ? requestData.documentID : ''}`;
+    let path = constant.API_END_POINTS.DOCUMENTS + `/${requestData.documentID || ''}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.GET, constant.HOST_URL, path, {}, headers);
 
 }
@@ -120,22 +125,25 @@ async function getDocumentByID(requestData) {
  */
 
 async function validateDocument(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.file || !requestData.file.path)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.file || !requestData.file.path) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let headers = getHeaders(requestData);
-    if (!headers)
+    const headers = getHeaders(requestData);
+
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     const formData = {
         document: {
             value:  fs.createReadStream(requestData.file.path),
             options: {
-                filename: requestData.file.name ?requestData.file.name : requestData.file.path.replace(/^.*[\\\/]/, '')
-            }
-        }
+                filename: requestData.file.name ?requestData.file.name : requestData.file.path.replace(/^.*[\\\/]/, ''),
+            },
+        },
     };
-    let path = constant.API_END_POINTS.DOCUMENTS_VALIDATE;
+    const path = constant.API_END_POINTS.DOCUMENTS_VALIDATE;
 
     return await HttpService.httpMultiPartRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, path, formData, headers);
 
@@ -155,20 +163,22 @@ async function validateDocument(requestData) {
 
 async function updateDocument(requestData) {
 
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.documentID || !requestData.documentSignType || !requestData.country)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.documentID || !requestData.documentSignType || !requestData.country) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let headers = getHeaders(requestData);
-    if (!headers)
+    const headers = getHeaders(requestData);
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let data = {
-        documentID: requestData.documentID ? requestData.documentID : '',
-        documentSignType: requestData.documentSignType ? requestData.documentSignType : '',
-        country: requestData.country ? requestData.country : '',
+    const data = {
+        documentID: requestData.documentID || '',
+        documentSignType: requestData.documentSignType || '',
+        country: requestData.country || '',
     };
 
-    let path = constant.API_END_POINTS.DOCUMENTS;
+    const path = constant.API_END_POINTS.DOCUMENTS;
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, data, headers);
 
 }
@@ -185,19 +195,22 @@ async function updateDocument(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function shareDocument(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.documentID || !requestData.postedTo)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.documentID || !requestData.postedTo) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let headers = getHeaders(requestData);
-    if (!headers)
+    const headers = getHeaders(requestData);
+
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-    let data = {
-        documentID: requestData.documentID ? requestData.documentID : '',
-        postedTo: requestData.postedTo ? requestData.postedTo : ''
+    const data = {
+        documentID: requestData.documentID || '',
+        postedTo: requestData.postedTo || '',
     };
 
-    let path = constant.API_END_POINTS.DOCUMENTS_SHARE;
+    const path = constant.API_END_POINTS.DOCUMENTS_SHARE;
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, data, headers);
 
 
