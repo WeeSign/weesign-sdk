@@ -60,6 +60,7 @@ async function addDocument(requestData) {
     const formData = {
         document: {
             value:  fs.createReadStream(requestData.file.path),
+            options: {},
         },
     };
 
