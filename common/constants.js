@@ -1,4 +1,5 @@
-"use strict";
+'use strict';
+
 module.exports = Object.freeze({
 
     HEADER_KEY_REQUEST_ID_KEY: 'request-id',
@@ -13,7 +14,7 @@ module.exports = Object.freeze({
             FORBIDDEN: 401,
             BAD_REQUEST: 402,
             NOT_MODIFIED: 302,
-            OPEN_PAY_CARD_ERROR: 3001
+            OPEN_PAY_CARD_ERROR: 3001,
         })
     }),
     LOG_TYPE: Object.freeze({
@@ -23,11 +24,10 @@ module.exports = Object.freeze({
         VERBOSE: 'verbose',
         DEBUG: 'debug',
         SILLY: 'silly',
-        HTTP_REQUEST: 'http request'
+        HTTP_REQUEST: 'http request',
     }),
-
     MAPPING_TYPE: Object.freeze({
-        JSON_TO_JSON: 'JSON_TO_JSON'
+        JSON_TO_JSON: 'JSON_TO_JSON',
     }),
     CURRENT_TIMESTAMP: (new Date()).getTime(),
     HTTP: Object.freeze({
@@ -46,40 +46,41 @@ module.exports = Object.freeze({
         CONTENT_TYPE: {
             MULTI_PART_FORM_DATA: 'multipart/form-data',
             URL_ENCODE: 'application/x-www-form-urlencoded',
-            APPLICATION_JSON:  "application/json"
-        }
+            APPLICATION_JSON:  'application/json'
+        },
     }),
-    HTTP_METHOD:{
-        POST:'post',
-        GET:'get',
-        PUT:'put',
-        DELETE:'delete'
+    HTTP_METHOD: {
+        POST: 'post',
+        GET: 'get',
+        PUT: 'put',
+        DELETE: 'delete',
     },
-    HOST_URL:"https://www.weesign.mx:3000",
-    API_END_POINTS:{
-        ACCESS_TOKEN:"/access/token",
-        DOCUMENTS:"/documents",
-        DOCUMENTS_VALIDATE:"/documents/validate",
-        DOCUMENTS_SHARE:"/documents/share",
-        DOCUMENTS_SIGNATORY:"/documents/signatory",
-        DOCUMENTS_RESEND:"/documents/resend-email",
-        WEBHOOK:"/webhooks"
+    HOST_URL: 'https://www.weesign.mx:3000',
+    API_END_POINTS: {
+        ACCESS_TOKEN: '/access/token',
+        DOCUMENTS: '/documents',
+        DOCUMENTS_VALIDATE: '/documents/validate',
+        DOCUMENTS_SHARE: '/documents/share',
+        DOCUMENTS_SIGNATORY: '/documents/signatory',
+        DOCUMENTS_FIXED_SIGNATORY: '/documents/fixed-signatory',
+        DOCUMENTS_RESEND: '/documents/resend-email',
+        WEBHOOK: '/webhooks',
     },
-    WEBHOOK_TYPE:{
-        COMPLETE_DOCUMENT:"completedDocument"
+    WEBHOOK_TYPE: {
+        COMPLETE_DOCUMENT: 'completedDocument',
     },
-    DOCUMENT_SIGN_TYPE:{
-        ELECTRONIC:"ELECTRONIC_SIGNATURE",
-        E_FIRMA:"E_FIRMA",
+    DOCUMENT_SIGN_TYPE: {
+        ELECTRONIC: 'ELECTRONIC_SIGNATURE',
+        E_FIRMA: 'E_FIRMA',
     },
     COUNTRY:{
-        MEXICO:"Mexico"
+        MEXICO: 'Mexico',
     },
     LANGUAGE:{
-        SPANISH:"es",
-        ENGLISH:"en"
+        SPANISH: 'es',
+        ENGLISH: 'en'
     },
     MESSAGE:{
-        INVALID_PARAMS:"Invalid Parameters"
-    }
+        INVALID_PARAMS: 'Invalid Parameters',
+    },
 });

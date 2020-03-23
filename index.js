@@ -184,6 +184,40 @@ async function updateDocument(requestData) {
 
 }
 
+
+/**
+ *
+ * @param {Object} requestData The requestData for update the document.
+ * 'user-id' is userID of user and 'token' is a token
+ * 'token' can get using the accessToken as shown above
+ *  'documentID' documentID of document which to be fetch
+ *  'staticSignPositions' Position list (imagenSize, coordinates, page, color) by email
+ *
+ * (Note: the document ony can update if document status is DRAFT.)
+ * @returns {Promise<{responseData, message, success, responseCode}>}
+ */
+
+async function updateFixedPositionDocument(requestData) {
+
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.documentID || !requestData.staticSignPositions) {
+        return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
+
+    const headers = getHeaders(requestData);
+
+    if (!headers) {
+        return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
+
+    const data = {
+        documentID: requestData.documentID || '',
+        staticSignPositions: requestData.staticSignPositions || null,
+    };
+
+    const path = constant.API_END_POINTS.DOCUMENTS_FIXED_SIGNATORY;
+    return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, data, headers);
+}
+
 /**
  *
  * @param {Object} requestData The requestData for sending the document.
@@ -270,6 +304,7 @@ async function addSignatory(requestData) {
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, data, headers);
 
 }
+
 /**
  *
  * @param {Object} requestData The requestData for resend mail for signature to the signatory of the document.
@@ -290,7 +325,6 @@ async function resendEmailToSignatory(requestData) {
 
     let path = constant.API_END_POINTS.DOCUMENTS_RESEND + `?documentID=${requestData.documentID ? requestData.documentID : ''}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, {}, headers);
-
 }
 
 /**
@@ -305,16 +339,19 @@ async function resendEmailToSignatory(requestData) {
  */
 
 async function addWebHook(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.url || !requestData.type)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.url || !requestData.type) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let headers = getHeaders(requestData);
-    if (!headers)
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
-    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url ? requestData.url : ''}&type=${requestData.type ? requestData.type : constant.WEBHOOK_TYPE.COMPLETE_DOCUMENT}`;
-    return await HttpService.httpRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, path, {}, headers);
+    }
 
+    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url || ''}&type=${requestData.type || constant.WEBHOOK_TYPE.COMPLETE_DOCUMENT}&options=${requestData.options || ''}`;
+    return await HttpService.httpRequest(constant.HTTP_METHOD.POST, constant.HOST_URL, path, {}, headers);
 }
+
 /**
  *
  * @param {Object} requestData The requestData for get webHook.
@@ -325,19 +362,22 @@ async function addWebHook(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function getWebHook(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let headers = getHeaders(requestData);
-    if (!headers)
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let path = constant.API_END_POINTS.WEBHOOK;
-    if(requestData.webHookID)
+    if(requestData.webHookID) {
         path = path + `?webHookID=${requestData.webHookID}`;
+    }
     return await HttpService.httpRequest(constant.HTTP_METHOD.GET, constant.HOST_URL, path, {}, headers);
-
 }
+
 /**
  *
  * @param {Object} requestData The requestData for delete webHook.
@@ -348,12 +388,14 @@ async function getWebHook(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function deleteWebHook(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.webHookID)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.webHookID) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let headers = getHeaders(requestData);
-    if (!headers)
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let path = constant.API_END_POINTS.WEBHOOK + `?webHookID=${requestData.webHookID}`;
     return await HttpService.httpRequest(constant.HTTP_METHOD.DELETE, constant.HOST_URL, path, {}, headers);
@@ -370,27 +412,29 @@ async function deleteWebHook(requestData) {
  * @returns {Promise<{responseData, message, success, responseCode}>}
  */
 async function updateWebHook(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.url || !requestData.webHookID)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token || !requestData.url || !requestData.webHookID) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
     let headers = getHeaders(requestData);
-    if (!headers)
+    if (!headers) {
         return HttpService.response({}, constant.MESSAGE.INVALID_PARAMS, constant.RESPONSE.FAILURE, constant.RESPONSE.CODES.NOT_FOUND);
+    }
 
-
-    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url}&webHookID=${requestData.webHookID}`;
+    let path = constant.API_END_POINTS.WEBHOOK + `?url=${requestData.url}&webHookID=${requestData.webHookID}&options=${requestData.options || ''}`;
 
     return await HttpService.httpRequest(constant.HTTP_METHOD.PUT, constant.HOST_URL, path, {}, headers);
 
 }
 
 function getHeaders(requestData) {
-    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token)
+    if (!requestData || !Object.keys(requestData).length || !requestData['user-id'] || !requestData.token) {
         return false;
+    }
 
     return {
         'user-id': requestData['user-id'] ? requestData['user-id'] : '',
-        'token': requestData.token ? requestData.token : ''
+        'token': requestData.token ? requestData.token : '',
     };
 }
 
@@ -401,6 +445,7 @@ module.exports = {
     getDocumentByID,
     validateDocument,
     updateDocument,
+    updateFixedPositionDocument,
     shareDocument,
     deleteDocument,
     addSignatory,
