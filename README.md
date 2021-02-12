@@ -99,6 +99,7 @@ const data = {
    documentSignType: 'ELECTRONIC_SIGNATURE',
    country: 'Mexico',
    language: 'es',
+   position: ""
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -107,6 +108,7 @@ const data = {
 // 'documentSignType' Type of signature can be ELECTRONIC_SIGNATURE or E_FIRMA
 // 'country' country  is country name For example Mexico, United States, Canada, New Zealand, Australia, Afghanistan, Aland Islands, Albania
 // 'language' language for sending mail format in spanish or english. For spanish language is 'es' and For english language is 'en'
+// 'position' Available values : geolocation
 
 const response = await weesign.addDocument(data);
 
@@ -148,6 +150,7 @@ const data = {
    'documentID': 'd5e6287a556a72ef9db209e1b',
    'documentSignType': 'ELECTRONIC_SIGNATURE',
    'country': 'United States',
+   'position': '',
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -195,23 +198,28 @@ const data = {
    token: '[TOKEN-ID]',
    documentID: 'd5e6287a556a72ef9db209e1e',
    staticSignPositions: [{
-     user:{
-       email: 'info@example.com',
-     },
-     coordinates: {
-       x: 23.12,
-       y: 13.08,
-     },
-     page: 0,
-     color: '#FFD247',
-     imageSize: {
-        width: '16.13',
-        height: '6.08',
+      user:{
+         email: 'info@example.com',
       },
-     parentImageSize: {
+      coordinates: {
+         x: 23.12,
+         y: 13.08,
+      },
+      page: 0,
+      pageY: 0,
+      color: '#FFD247',
+      imageSize: {
+         width: '16.13',
+         height: '6.08',
+      },
+      parentImageSize: {
         width: 930,
         height: 1315,
-      }
+      },
+      viewport: {
+        width: "string",
+        height: "string"
+      },
    }],
 };
 
@@ -383,11 +391,14 @@ const data = {
    'token': '[TOKEN-ID]',
    'documentID': 'a556a72ef9db209e1b878b8a6b',
    'message': 'hello',
-   'title': 'sign the document'
+   'title': 'sign the document',
+   'disableMailing': true,
    'signatory': [{
-        'emailID': 'info@example.com',
-        'name': 'name of user'
-      }],
+      'emailID': 'info@example.com',
+      'name': 'name of user'
+      'identification': 'id, face',
+      'check': true
+   }],
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -395,6 +406,7 @@ const data = {
 // 'documentID' id of document which you want to get.
 // 'message' message is text that will we  send in the mail to the signatories.
 // 'title' title is text that will we send in the mail to the signatories.
+// 'disableMailing' this value determines if an email is sent through the platform
 // 'signatory' signatory is a array of object and each object contain email address and name of signatory.
 // (Note: The signatory of document can add if document status is DRAFT.)
 
