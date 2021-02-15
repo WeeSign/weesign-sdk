@@ -7,6 +7,7 @@
   - [Create Access Token](#Create-Access-Token)
   - [Add New Document](#Add-New-Document)
   - [Update an existing Document](#Update-an-existing-Document)
+  - [Update an fixed position signatory in Document](#Update-static-position-in-existing-Document)
   - [Delete Document](#Delete-Document)
   - [Get All document assiciated with a user](#Get-All-document-assiciated-with-a-user)
   - [Get a particular Document](#Get-All-document-assiciated-with-a-user)
@@ -23,6 +24,7 @@
 - Create Access Token 
 - Add New Document
 - Update an existing Document
+- Update an fixed position signatory in Document
 - Delete Document
 - Get All document assiciated with a user
 - Get a particular Document
@@ -97,6 +99,7 @@ const data = {
    documentSignType: 'ELECTRONIC_SIGNATURE',
    country: 'Mexico',
    language: 'es',
+   position: ""
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -105,6 +108,7 @@ const data = {
 // 'documentSignType' Type of signature can be ELECTRONIC_SIGNATURE or E_FIRMA
 // 'country' country  is country name For example Mexico, United States, Canada, New Zealand, Australia, Afghanistan, Aland Islands, Albania
 // 'language' language for sending mail format in spanish or english. For spanish language is 'es' and For english language is 'en'
+// 'position' Available values : geolocation
 
 const response = await weesign.addDocument(data);
 
@@ -146,6 +150,7 @@ const data = {
    'documentID': 'd5e6287a556a72ef9db209e1b',
    'documentSignType': 'ELECTRONIC_SIGNATURE',
    'country': 'United States',
+   'position': '',
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -154,6 +159,76 @@ const data = {
 // "documentSignType" is type of signature for sign the document. documentSignType either "ELECTRONIC_SIGNATURE" or "E_FIRMA"
 // "country" is country name for example United States, Mexico etc
 const reponse = await weesign.updateDocument(data);
+
+// and the reponse will be look like this
+// { "responseData": {
+//     "documentID": "5d4adeac1d6391bc05d13be",
+//      "documentType": "OTHER",
+//      "status": "DRAFT",
+//      "country": "United States",
+//      "documentSignType": "ELECTRONIC_SIGNATURE",
+ //     "addedOn": 1565188066047,
+ //     "documentFileObj": {
+ //       "url": "https://signing-file.s3.amazonaws.com/sample.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIXB7WAVV4G_7T142236Z&X-Amz-Expires=518400&X-Amz-Signature=eb6938817d3e0be20c7ca23b16991fb90b6e65f9aabf22ca3d4d4f01a4548241&X-Amz-SignedHeaders=host",
+  //      "size": "2.6 MB"
+  //    },
+  //    "signatory": []
+  //  },
+//  "message": "Document updated Successfully",
+// "success": true,
+//  "responseCode": 200
+//}
+
+```
+
+
+### Update an fixed position signatory in Document
+
+_This example for Update signatory position in existing Document._
+
+<!-- prettier-ignore -->
+```js
+const weesign = require('@weesign/weesign');
+
+// Prerequisite: User needs to have a userID, access token and document should exit and status have DRAFT
+
+// data to be passed for update fixed signatory in Document
+const data = {
+   'user-id': '[USER-ID]',
+   token: '[TOKEN-ID]',
+   documentID: 'd5e6287a556a72ef9db209e1e',
+   staticSignPositions: [{
+      user:{
+         email: 'info@example.com',
+      },
+      coordinates: {
+         x: 23.12,
+         y: 13.08,
+      },
+      page: 0,
+      pageY: 0,
+      color: '#FFD247',
+      imageSize: {
+         width: '16.13',
+         height: '6.08',
+      },
+      parentImageSize: {
+        width: 930,
+        height: 1315,
+      },
+      viewport: {
+        width: "string",
+        height: "string"
+      },
+   }],
+};
+
+// 'user-id' is userID of document Owner/Creater
+// 'token' is acces token which is generated using accessToken()
+// 'documentID' is Id of od document which to be update
+// "documentSignType" is type of signature for sign the document. documentSignType either "ELECTRONIC_SIGNATURE" or "E_FIRMA"
+// "country" is country name for example United States, Mexico etc
+const reponse = await weesign.updateFixedPositionDocument(data);
 
 // and the reponse will be look like this
 // { "responseData": {
@@ -316,11 +391,14 @@ const data = {
    'token': '[TOKEN-ID]',
    'documentID': 'a556a72ef9db209e1b878b8a6b',
    'message': 'hello',
-   'title': 'sign the document'
+   'title': 'sign the document',
+   'disableMailing': true,
    'signatory': [{
-        'emailID': 'info@example.com',
-        'name': 'name of user'
-      }],
+      'emailID': 'info@example.com',
+      'name': 'name of user'
+      'identification': 'id, face',
+      'check': true
+   }],
 };
 
 // 'user-id' is userID of document Owner/Creater
@@ -328,6 +406,7 @@ const data = {
 // 'documentID' id of document which you want to get.
 // 'message' message is text that will we  send in the mail to the signatories.
 // 'title' title is text that will we send in the mail to the signatories.
+// 'disableMailing' this value determines if an email is sent through the platform
 // 'signatory' signatory is a array of object and each object contain email address and name of signatory.
 // (Note: The signatory of document can add if document status is DRAFT.)
 
