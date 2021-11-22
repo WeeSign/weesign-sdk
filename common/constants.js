@@ -55,7 +55,7 @@ module.exports = Object.freeze({
         PUT: 'put',
         DELETE: 'delete',
     },
-    HOST_URL: 'https://www.weesign.mx:3000',
+    HOST_URL: 'https://api-new.weesign.mx',
     API_END_POINTS: {
         ACCESS_TOKEN: '/access/token',
         DOCUMENTS: '/documents',
